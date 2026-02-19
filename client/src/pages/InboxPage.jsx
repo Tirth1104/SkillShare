@@ -85,15 +85,15 @@ const InboxPage = () => {
                                                                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-theme-surface"></div>
                                                             )}
                                                         </div>
-                                                        <div>
-                                                            <h3 className="font-bold text-xl group-hover:text-theme-primary transition-colors flex items-center gap-2">
-                                                                {partner.username}
-                                                                <span className="flex items-center text-yellow-500 text-sm font-semibold bg-yellow-500/10 px-2 py-0.5 rounded-full">
+                                                        <div className="flex-1 min-w-0">
+                                                            <h3 className="font-bold text-xl group-hover:text-theme-primary transition-colors flex items-center gap-2 overflow-hidden">
+                                                                <span className="truncate" title={partner.username}>{partner.username}</span>
+                                                                <span className="flex-shrink-0 flex items-center text-yellow-500 text-sm font-semibold bg-yellow-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">
                                                                     <Star size={12} className="fill-yellow-500 mr-1" />
                                                                     {partner.rating?.toFixed(1) || '0.0'}
                                                                 </span>
                                                             </h3>
-                                                            <p className="text-theme-muted text-sm font-medium truncate max-w-sm mt-1 opacity-80">
+                                                            <p className="text-theme-muted text-sm font-medium truncate max-w-full mt-1 opacity-80">
                                                                 {chat.lastMessage || <span className="italic opacity-60">Start the conversation...</span>}
                                                             </p>
                                                         </div>

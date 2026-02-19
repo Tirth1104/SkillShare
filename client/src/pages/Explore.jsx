@@ -128,7 +128,7 @@ const Explore = () => {
                                     <button
                                         key={skill.name}
                                         onClick={() => toggleSkill(skill.name)}
-                                        className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-300 transform hover:scale-105 flex items-center gap-2
+                                        className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-300 transform hover:scale-105 flex items-center gap-2 cursor-pointer
                                             ${selectedSkill === skill.name
                                                 ? 'bg-theme-primary text-white animate-pulse-neon shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.5)]'
                                                 : 'bg-theme-surface/50 border border-white/5 text-theme-muted hover:border-theme-primary/30 hover:text-theme-text'}`}
@@ -199,20 +199,20 @@ const Explore = () => {
                                         style={{ animationDelay: `${index * 100}ms` }}
                                     >
                                         <div>
-                                            <div className="flex items-center justify-between mb-8">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-theme-primary to-purple-600 p-[2px]">
+                                            <div className="flex items-center justify-between mb-8 gap-4">
+                                                <div className="flex items-center gap-4 min-w-0 flex-1">
+                                                    <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-theme-primary to-purple-600 p-[2px] flex-shrink-0 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
                                                         <div className="w-full h-full bg-theme-bg rounded-[1.3rem] flex items-center justify-center text-2xl font-black text-white">
                                                             {u.username[0].toUpperCase()}
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <h3 className="text-xl font-black tracking-tight group-hover:text-theme-primary transition-colors">{u.username}</h3>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3 className="text-xl font-black tracking-tight group-hover:text-theme-primary transition-colors truncate block" title={u.username}>{u.username}</h3>
                                                         <div className="flex items-center text-sm font-bold gap-3">
-                                                            <span className="flex items-center text-yellow-500">
+                                                            <span className="flex items-center text-yellow-500 whitespace-nowrap">
                                                                 <Star size={14} className="fill-yellow-500 mr-1" /> {u.rating.toFixed(1)}
                                                             </span>
-                                                            <span className="text-theme-muted opacity-60">
+                                                            <span className="text-theme-muted opacity-60 truncate">
                                                                 {u.sessionsCompleted} sessions
                                                             </span>
                                                         </div>

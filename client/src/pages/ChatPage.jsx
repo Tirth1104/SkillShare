@@ -244,10 +244,11 @@ const ChatPage = () => {
                         <div className="w-10 h-10 bg-gradient-to-br from-theme-primary to-purple-500 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg">
                             {displayPartner.username[0]}
                         </div>
-                        <div>
-                            <h2 className="font-extrabold text-xl tracking-tight">
-                                <span className="gradient-text-primary">{displayPartner.username}</span> {displayPartner.rating !== undefined && (
-                                    <span className="text-yellow-500 text-sm ml-2">★ {displayPartner.rating?.toFixed(1) || '0.0'}</span>
+                        <div className="flex-1 min-w-0">
+                            <h2 className="font-extrabold text-xl tracking-tight flex items-center gap-2">
+                                <span className="gradient-text-primary truncate" title={displayPartner.username}>{displayPartner.username}</span>
+                                {displayPartner.rating !== undefined && (
+                                    <span className="flex-shrink-0 text-yellow-500 text-sm">★ {displayPartner.rating?.toFixed(1) || '0.0'}</span>
                                 )}
                             </h2>
                             <p className={`text-xs font-semibold ${displayPartner.isOnline ? 'text-green-500' : 'text-theme-muted'}`}>
