@@ -12,25 +12,36 @@ const Dashboard = () => {
     const { user, updateUserProfile, checkUserLoggedIn } = useAuth();
     const [newSkillTeach, setNewSkillTeach] = useState('');
     const [newSkillLearn, setNewSkillLearn] = useState('');
-    const [darkMode, setDarkMode] = useState(document.documentElement.classList.contains('dark'));
+    // Dynamic Chart Colors based on Theme
+    const [chartColors, setChartColors] = useState({
+        text: '#111827',
+        muted: '#4b5563',
+        grid: 'rgba(0, 0, 0, 0.1)'
+    });
 
-    // Watch for theme changes and refresh profile
     useEffect(() => {
-        if (checkUserLoggedIn) checkUserLoggedIn();
-
-        // Initial check with a small delay to ensure Navbar has set the class
-        const timer = setTimeout(() => {
-            setDarkMode(document.documentElement.classList.contains('dark'));
-        }, 100);
-
-        const observer = new MutationObserver(() => {
-            setDarkMode(document.documentElement.classList.contains('dark'));
-        });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-        return () => {
-            observer.disconnect();
-            clearTimeout(timer);
+        const updateThemeColors = () => {
+            const styles = getComputedStyle(document.body);
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            // Get robust computed colors
+            const textColor = styles.getPropertyValue('--color-text').trim() || (isDark ? '#e5e7eb' : '#111827');
+            const mutedColor = styles.getPropertyValue('--color-text-muted').trim() || (isDark ? '#9ca3af' : '#4b5563');
+            
+            setChartColors({
+                text: textColor,
+                muted: mutedColor,
+                grid: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            });
         };
+
+        // Initial update
+        updateThemeColors();
+
+        const observer = new MutationObserver(updateThemeColors);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        
+        return () => observer.disconnect();
     }, []);
 
     // Username editing state
@@ -65,28 +76,28 @@ const Dashboard = () => {
             legend: {
                 position: 'top',
                 labels: {
-                    color: darkMode ? '#e5e7eb' : '#374151',
+                    color: chartColors.text,
                     font: { size: 14 }
                 }
             },
             title: {
                 display: true,
                 text: 'Your Performance',
-                color: darkMode ? '#f9fafb' : '#111827',
+                color: chartColors.text,
                 font: { size: 18, weight: 'bold' }
             },
         },
         scales: {
             y: {
                 ticks: {
-                    color: darkMode ? '#cbd5e1' : '#4b5563',
+                    color: chartColors.muted,
                     font: { weight: '500' }
                 },
-                grid: { color: darkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)' }
+                grid: { color: chartColors.grid }
             },
             x: {
                 ticks: {
-                    color: darkMode ? '#cbd5e1' : '#4b5563',
+                    color: chartColors.muted,
                     font: { weight: '500' },
                     maxRotation: 0,
                     minRotation: 0
