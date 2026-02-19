@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { MessageSquare, Calendar, Star, Clock, CheckCircle } from 'lucide-react';
 
 const InboxPage = () => {
+    const navigate = useNavigate();
     const { user } = useAuth();
     const [chats, setChats] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -123,9 +124,9 @@ const InboxPage = () => {
                                         return (
                                             <div
                                                 key={chat._id}
-                                                className="bg-theme-surface/60 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 hover:bg-theme-surface transition-colors opacity-80 hover:opacity-100"
+                                                className="bg-theme-surface/60 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 hover:bg-theme-surface transition-colors opacity-80 hover:opacity-100 flex flex-col h-full justify-between"
                                             >
-                                                <div className="flex items-center space-x-4">
+                                                <div className="flex items-center space-x-4 mb-4">
                                                     <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-lg font-bold text-gray-500 dark:text-gray-400">
                                                         {partner.username[0]?.toUpperCase()}
                                                     </div>
@@ -137,7 +138,27 @@ const InboxPage = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {/* No message preview, just a static history item */}
+
+                                                <div className="flex gap-2 mt-2">
+                                                    <button
+                                                        onClick={() => navigate(`/chat/${chat._id}`)}
+                                                        className="flex-1 px-3 py-2 bg-theme-primary/10 hover:bg-theme-primary/20 text-theme-primary rounded-xl text-xs font-bold transition text-center"
+                                                    >
+                                                        Start Session
+                                                    </button>
+                                                    <button
+                                                        onClick={() => navigate('/feedback', {
+                                                            state: {
+                                                                partnerId: partner._id,
+                                                                username: partner.username,
+                                                                roomId: chat._id
+                                                            }
+                                                        })}
+                                                        className="flex-1 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl text-xs font-bold transition text-center"
+                                                    >
+                                                        End Session
+                                                    </button>
+                                                </div>
                                             </div>
                                         );
                                     })}
