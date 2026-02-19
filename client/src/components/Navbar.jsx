@@ -8,7 +8,6 @@ const Navbar = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const handleLogoutClick = () => {

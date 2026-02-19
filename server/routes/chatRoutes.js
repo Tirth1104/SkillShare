@@ -97,11 +97,39 @@ router.post('/messages/bulk-delete', auth, async (req, res) => {
         }
 
         await Message.deleteMany({ _id: { $in: ownedMessageIds } });
-        res.json({ 
-            message: 'Messages deleted', 
+        res.json({
+            message: 'Messages deleted',
             deletedCount: ownedMessageIds.length,
-            deletedIds: ownedMessageIds 
+            deletedIds: ownedMessageIds
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Delete a chat session and its messages
+router.delete('/:chatId', auth, async (req, res) => {
+    try {
+        const chatId = req.params.chatId;
+
+        // Verify participation
+        const chat = await Chat.findOne({
+            _id: chatId,
+            participants: req.user.id
+        });
+
+        if (!chat) {
+            return res.status(404).json({ message: 'Chat not found or unauthorized' });
+        }
+
+        // Delete messages
+        await Message.deleteMany({ chatId: chatId });
+
+        // Delete chat
+        await Chat.findByIdAndDelete(chatId);
+
+        res.json({ message: 'Chat session deleted successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });

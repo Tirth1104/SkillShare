@@ -168,8 +168,9 @@ module.exports = (io) => {
         });
 
         socket.on('leave_room', async ({ roomId }, callback) => {
+            console.log(`[CHAT] leave_room triggered for Room: ${roomId} by User: ${socket.id}`);
+
             try {
-                // Find participants to increment session count
                 const chat = await Chat.findById(roomId);
                 if (chat && !chat.isCompleted) {
                     await User.updateMany(
@@ -179,16 +180,23 @@ module.exports = (io) => {
                     chat.isCompleted = true; // Mark chat as counted
                     await chat.save();
                     console.log(`[CHAT] Sessions incremented for both participants in room ${roomId}`);
-
-                    // NEW: Delete chat history and the chat record for a fresh start
-                    console.log(`[CHAT] Deleting history for room ${roomId} as session ended.`);
-                    await Message.deleteMany({ chatId: roomId });
-                    await Chat.findByIdAndDelete(roomId);
                 }
             } catch (err) {
                 console.error("[CHAT] Error incrementing sessions:", err);
             }
 
+            // 2. DELETE CHAT HISTORY (Critical - Force Delete)
+            try {
+                const messageDeleteResult = await Message.deleteMany({ chatId: roomId });
+                console.log(`[CHAT] Messages deleted for room ${roomId}. Count: ${messageDeleteResult.deletedCount}`);
+
+                const chatDeleteResult = await Chat.findByIdAndDelete(roomId);
+                console.log(`[CHAT] Chat room deleted: ${roomId}. Result: ${chatDeleteResult ? 'Success' : 'Not Found/Already Deleted'}`);
+            } catch (err) {
+                console.error("[CHAT] CRITICAL ERROR deleting chat/messages:", err);
+            }
+
+            // 3. Notify and cleanup
             socket.to(roomId).emit('session_ended', { roomId });
             socket.leave(roomId);
             socket.roomId = null;

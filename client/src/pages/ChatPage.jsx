@@ -65,6 +65,7 @@ const ChatPage = () => {
         });
 
         newSocket.on('session_ended', () => {
+            setMessages([]); // Clear messages immediately
             toast.error('The other user has ended the session.', { id: 'session-end' });
             setTimeout(() => {
                 navigate('/feedback', {
@@ -83,21 +84,12 @@ const ChatPage = () => {
         };
     }, [roomId]); // ONLY depend on roomId
 
-    // Separate Effect for data fetching
-    useEffect(() => {
-        // Fetch chat history
-        const fetchHistory = async () => {
-            try {
-                const { data } = await api.get(`/chats/${roomId}`);
-                setMessages(data);
-            } catch (error) {
-                console.error("Error fetching chat history:", error);
-            }
-        };
 
-        // Fetch partner info if missing
+
+    // Fetch history and partner info
+    useEffect(() => {
         const fetchPartnerInfo = async () => {
-            if (partnerRef.current) return; // Use partnerRef here
+            if (partnerRef.current) return;
             try {
                 const { data } = await api.get(`/chats/${roomId}/info`);
                 const otherUser = data.participants.find(p => p._id !== user._id);
@@ -114,13 +106,22 @@ const ChatPage = () => {
             }
         };
 
+        const fetchHistory = async () => {
+            try {
+                const { data } = await api.get(`/chats/${roomId}`);
+                setMessages(data);
+            } catch (error) {
+                console.error("Error fetching chat history:", error);
+            }
+        };
+
         fetchHistory();
         fetchPartnerInfo();
 
         if (state?.partner) {
             toast.success(`Joined chat with ${state.partner.username}`, { id: `join-${roomId}` });
         }
-    }, [roomId]);
+    }, [roomId, user._id, state?.partner]);
 
 
     useEffect(() => {
@@ -187,8 +188,12 @@ const ChatPage = () => {
         setShowModal(true);
     };
 
-    const confirmEndSession = () => {
+    const confirmEndSession = async () => {
         console.log('[CHAT] confirmEndSession clicked. Socket:', socket?.connected ? 'connected' : 'disconnected');
+
+        // Immediate UI feedback
+        setMessages([]);
+        setShowModal(false);
 
         const feedbackData = {
             partnerId: partner?.id,
@@ -196,6 +201,16 @@ const ChatPage = () => {
             roomId
         };
 
+        // 1. Force delete via API (Reliable)
+        try {
+            await api.delete(`/chats/${roomId}`);
+            console.log('[CHAT] Chat deleted via API');
+        } catch (error) {
+            console.error('[CHAT] Error deleting chat via API:', error);
+            // Continue anyway to ensure UI navigation
+        }
+
+        // 2. Notify partner via Socket (Best Effort)
         if (socket && socket.connected) {
             // Emitting to server with timeout fallback
             console.log('[CHAT] Emitting leave_room to server...');
@@ -203,9 +218,9 @@ const ChatPage = () => {
             // Set a safety timeout in case server doesn't respond
             const timeout = setTimeout(() => {
                 console.log('[CHAT] leave_room acknowledgment timed out. Navigating anyway...');
-                toast.success('Session ended (offline)');
+                toast.success('Session ended');
                 navigate('/feedback', { state: feedbackData });
-            }, 2000);
+            }, 1000);
 
             socket.emit('leave_room', { roomId }, () => {
                 console.log('[CHAT] Received leave_room acknowledgment from server');
@@ -282,8 +297,8 @@ const ChatPage = () => {
                     {messages.filter(msg => (msg.content || msg.message)?.trim().length > 0).map((msg, i) => {
                         const isSelected = selectedIds.includes(msg._id || msg.id);
                         return (
-                            <div key={i} className={`flex items-center space-x-2 ${msg.sender === user.username ? 'flex-row-reverse space-x-reverse' : 'flex-row'}`}>
-                                {selectionMode && msg.sender === user.username && (
+                            <div key={i} className={`flex items-center space-x-2 ${msg.sender?.toLowerCase() === user.username?.toLowerCase() ? 'flex-row-reverse space-x-reverse' : 'flex-row'}`}>
+                                {selectionMode && msg.sender?.toLowerCase() === user.username?.toLowerCase() && (
                                     <input
                                         type="checkbox"
                                         checked={isSelected}
@@ -291,10 +306,10 @@ const ChatPage = () => {
                                         className="w-5 h-5 rounded border-gray-300 text-theme-primary focus:ring-theme-primary cursor-pointer"
                                     />
                                 )}
-                                <div className={`group max-w-[80%] min-w-[50px] p-3 rounded-2xl shadow-sm ${msg.sender === user.username ? 'bg-theme-primary text-white rounded-tr-none' : 'bg-theme-bg text-theme-text rounded-tl-none border border-gray-100 dark:border-gray-700'} ${isSelected ? 'ring-2 ring-theme-primary' : ''}`}>
+                                <div className={`group max-w-[80%] min-w-[50px] p-3 rounded-2xl shadow-sm ${msg.sender?.toLowerCase() === user.username?.toLowerCase() ? 'bg-theme-primary text-white rounded-tr-none' : 'bg-theme-surface text-theme-text rounded-tl-none border border-gray-100 dark:border-gray-700'} ${isSelected ? 'ring-2 ring-theme-primary' : ''}`}>
                                     <div className="flex items-start justify-between">
                                         <p className="whitespace-pre-wrap break-words">{msg.content || msg.message}</p>
-                                        {!selectionMode && (msg._id || msg.id) && msg.sender === user.username && (
+                                        {!selectionMode && (msg._id || msg.id) && msg.sender?.toLowerCase() === user.username?.toLowerCase() && (
                                             <button
                                                 onClick={() => deleteMessage(msg._id || msg.id)}
                                                 className="ml-2 text-theme-bg hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
@@ -304,7 +319,7 @@ const ChatPage = () => {
                                             </button>
                                         )}
                                     </div>
-                                    <p className={`text-[10px] opacity-70 mt-1 text-right ${msg.sender === user.username ? 'text-white/80' : 'text-theme-muted'}`}>{msg.timestamp}</p>
+                                    <p className={`text-[10px] opacity-70 mt-1 text-right ${msg.sender?.toLowerCase() === user.username?.toLowerCase() ? 'text-white/80' : 'text-theme-muted'}`}>{msg.timestamp}</p>
                                 </div>
                             </div>
                         );
