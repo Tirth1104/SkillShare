@@ -73,7 +73,7 @@ const MatchPage = () => {
         <div className="min-h-screen bg-theme-bg text-theme-text transition-colors duration-200">
             <Navbar />
             <div className="flex flex-col items-center justify-center h-[80vh] text-center px-4">
-                <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-theme-primary to-purple-600 dark:from-theme-primary dark:to-purple-500 text-transparent bg-clip-text">
+                <h1 className="text-4xl font-bold mb-8 text-theme-primary dark:text-white">
                     Find Your Skill Match
                 </h1>
 
@@ -103,8 +103,8 @@ const MatchPage = () => {
                     {status === 'searching' && (
                         <div className="animate-pulse">
                             <div className="w-16 h-16 border-4 border-t-theme-primary border-r-purple-500 border-b-theme-primary border-l-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                            <p className="text-xl font-semibold mb-4 text-theme-text">Searching for a partner...</p>
-                            <button onClick={cancelSearch} className="text-red-500 hover:text-red-700 underline font-medium">Cancel Search</button>
+                            <p className="text-xl font-semibold mb-4 text-theme-text dark:text-white">Searching for a partner...</p>
+                            <button onClick={cancelSearch} className="text-red-500 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200 underline font-medium">Cancel Search</button>
                         </div>
                     )}
 
