@@ -203,14 +203,8 @@ const ChatPage = () => {
             roomId
         };
 
-        // 1. Force delete via API (Reliable)
-        try {
-            await api.delete(`/chats/${roomId}`);
-            console.log('[CHAT] Chat deleted via API');
-        } catch (error) {
-            console.error('[CHAT] Error deleting chat via API:', error);
-            // Continue anyway to ensure UI navigation
-        }
+        // 1. Mark session as completed (Optional: implement API to mark as completed if needed)
+        // For now, we just navigate away. The socket event will handle the server-side state.
 
         // 2. Notify partner via Socket (Best Effort)
         if (socket && socket.connected) {

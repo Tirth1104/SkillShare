@@ -170,26 +170,25 @@ module.exports = (io) => {
         const cleanupRoom = async (roomId) => {
             console.log(`[CHAT] Cleaning up Room: ${roomId}`);
             try {
-                // 1. Increment session count (if not already completed)
+                // 1. Mark session as completed and increment session count
                 const chat = await Chat.findById(roomId);
-                if (chat && !chat.isCompleted) {
-                    await User.updateMany(
-                        { _id: { $in: chat.participants } },
-                        { $inc: { sessionsCompleted: 1 } }
-                    );
-                    chat.isCompleted = true;
-                    await chat.save();
-                    console.log(`[CHAT] Sessions incremented for room ${roomId}`);
+                if (chat) {
+                    if (!chat.isCompleted) {
+                        await User.updateMany(
+                            { _id: { $in: chat.participants } },
+                            { $inc: { sessionsCompleted: 1 } }
+                        );
+                        chat.isCompleted = true;
+                        await chat.save();
+                        console.log(`[CHAT] Session marked as completed and counts incremented for room ${roomId}`);
+                    } else {
+                        console.log(`[CHAT] Session was already completed for room ${roomId}`);
+                    }
+                } else {
+                    console.log(`[CHAT] Chat not found during cleanup: ${roomId}`);
                 }
 
-                // 2. DELETE CHAT HISTORY (Critical - Force Delete)
-                const messageDeleteResult = await Message.deleteMany({ chatId: roomId });
-                console.log(`[CHAT] Messages deleted for room ${roomId}. Count: ${messageDeleteResult.deletedCount}`);
-
-                const chatDeleteResult = await Chat.findByIdAndDelete(roomId);
-                console.log(`[CHAT] Chat room deleted: ${roomId}. Result: ${chatDeleteResult ? 'Success' : 'Not Found'}`);
-
-                // 3. Notify partner
+                // 2. Notify partner
                 io.to(roomId).emit('session_ended', { roomId });
             } catch (err) {
                 console.error("[CHAT] CRITICAL ERROR during cleanup:", err);
