@@ -137,7 +137,7 @@ const Dashboard = () => {
         <div className="min-h-screen bg-theme-bg text-theme-text transition-colors duration-200">
             <Navbar />
             <div className="container mx-auto p-8">
-{/* [0] Welcome Header Section */}
+                {/* [0] Welcome Header Section */}
                 <div className="mb-10 flex items-center space-x-4 animate-text-focus-in">
                     <h1 className="text-4xl font-extrabold tracking-tight">Welcome,</h1>
 
@@ -157,9 +157,9 @@ const Dashboard = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex items-center space-x-3">
-                            <span className="text-4xl font-extrabold gradient-text-primary pb-1">{user?.username}</span>
-                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-theme-muted hover:text-theme-primary transition p-2 hover:bg-theme-surface rounded-xl">
+                        <div className="flex items-center space-x-3 min-w-0 flex-1">
+                            <span className="text-4xl font-extrabold gradient-text-primary pb-1 truncate max-w-[200px] md:max-w-[400px]" title={user?.username}>{user?.username}</span>
+                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="flex-shrink-0 text-theme-muted hover:text-theme-primary transition p-2 hover:bg-theme-surface rounded-xl">
                                 <Edit2 size={24} />
                             </button>
                         </div>
@@ -168,7 +168,7 @@ const Dashboard = () => {
                 </div>
                 {usernameError && <p className="text-red-500 mb-6 -mt-6">{usernameError}</p>}
 
-{/* Discover New Skills Discovery Card */}
+                {/* Discover New Skills Discovery Card */}
                 <div className="bg-gradient-to-r from-theme-primary to-purple-600 rounded-3xl p-8 mb-10 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01] animate-fade-in-up [--delay:200ms]">
                     <div className="text-center md:text-left">
                         <h2 className="text-3xl font-bold mb-2 text-white">Discover New Skills 🚀</h2>
@@ -182,7 +182,7 @@ const Dashboard = () => {
                     </Link>
                 </div>
 
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 animate-fade-in-up [--delay:400ms]">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 animate-fade-in-up [--delay:400ms]">
                     <div className="bg-theme-surface p-6 rounded-3xl shadow-lg transition-all border border-gray-100 dark:border-gray-800 hover-lift">
                         <h3 className="text-xl font-bold mb-2 text-theme-primary">Reputation Score</h3>
                         <p className="text-5xl font-extrabold tracking-tight">{user?.rating?.toFixed(1) || 'N/A'}</p>
