@@ -166,3 +166,34 @@ body {
 .hover-lift:hover {
   transform: translateY(-4px);
 }
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.neon-border {
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary), inset 0 0 5px var(--color-primary);
+}
+
+.neon-text {
+  text-shadow: 0 0 8px var(--color-primary);
+}
+
+@keyframes pulse-neon {
+  0% { box-shadow: 0 0 5px var(--color-primary); }
+  50% { box-shadow: 0 0 20px var(--color-primary); }
+  100% { box-shadow: 0 0 5px var(--color-primary); }
+}
+
+.animate-pulse-neon {
+  animation: pulse-neon 2s infinite;
+}

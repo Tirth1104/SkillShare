@@ -152,10 +152,43 @@ exports.updateProfile = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
     try {
-        const users = await User.find({ _id: { $ne: req.user.id } })
+        const { skill } = req.query;
+        let query = { _id: { $ne: req.user.id } };
+
+        if (skill) {
+            query.skillsTeach = { $in: [new RegExp(`^${skill}$`, 'i')] };
+        }
+
+        const users = await User.find(query)
             .select('username skillsTeach skillsLearn rating sessionsCompleted isOnline')
             .sort({ rating: -1 });
         res.json(users);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+exports.getSkills = async (req, res) => {
+    try {
+        const skills = await User.aggregate([
+            { $unwind: "$skillsTeach" },
+            {
+                $group: {
+                    _id: "$skillsTeach",
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { count: -1, _id: 1 } },
+            {
+                $project: {
+                    name: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ]);
+        res.json(skills);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
