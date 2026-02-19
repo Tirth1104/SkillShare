@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { MessageSquare, Calendar, Star } from 'lucide-react';
+import { MessageSquare, Calendar, Star, Clock, CheckCircle } from 'lucide-react';
 
 const InboxPage = () => {
     const { user } = useAuth();
@@ -30,10 +30,14 @@ const InboxPage = () => {
         return participants.find(p => p._id?.toString() !== currentUserId) || { username: 'Unknown' };
     };
 
+    // Split chats into active and completed
+    const activeChats = chats.filter(chat => !chat.isCompleted);
+    const historyChats = chats.filter(chat => chat.isCompleted);
+
     return (
         <div className="min-h-screen bg-theme-bg text-theme-text font-sans transition-colors duration-200">
             <Navbar />
-            <div className="container mx-auto px-4 py-8 max-w-4xl">
+            <div className="container mx-auto px-4 py-8 max-w-5xl">
                 <h1 className="text-5xl font-extrabold mb-10 gradient-text-primary tracking-tight pb-2 animate-text-focus-in">
                     Your Inbox
                 </h1>
@@ -52,53 +56,94 @@ const InboxPage = () => {
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid gap-5">
-                        {chats.map((chat, index) => {
-                            const partner = getPartner(chat.participants);
-                            return (
-                                <Link
-                                    key={chat._id}
-                                    to={`/chat/${chat._id}`}
-                                    state={{ partner: { username: partner.username, id: partner._id } }}
-                                    className="block bg-theme-surface border border-gray-100 dark:border-gray-800 rounded-3xl p-6 transition-all shadow-md group hover-lift hover:border-theme-primary/40 animate-fade-in-up"
-                                    style={{ animationDelay: `${index * 100}ms` }}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-5">
-                                            <div className="relative">
-                                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-theme-primary to-purple-600 flex items-center justify-center text-xl font-bold text-white shadow-lg">
-                                                    {partner.username[0]?.toUpperCase()}
+                    <div className="space-y-12">
+                        {/* Active Conversations Section */}
+                        {activeChats.length > 0 && (
+                            <div className="animate-fade-in-up">
+                                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                                    <MessageSquare className="text-theme-primary" /> Active Conversations
+                                </h2>
+                                <div className="grid gap-5">
+                                    {activeChats.map((chat, index) => {
+                                        const partner = getPartner(chat.participants);
+                                        return (
+                                            <Link
+                                                key={chat._id}
+                                                to={`/chat/${chat._id}`}
+                                                state={{ partner: { username: partner.username, id: partner._id } }}
+                                                className="block bg-theme-surface border border-gray-100 dark:border-gray-800 rounded-3xl p-6 transition-all shadow-md group hover-lift hover:border-theme-primary/40"
+                                                style={{ animationDelay: `${index * 100}ms` }}
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center space-x-5">
+                                                        <div className="relative">
+                                                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-theme-primary to-purple-600 flex items-center justify-center text-xl font-bold text-white shadow-lg">
+                                                                {partner.username[0]?.toUpperCase()}
+                                                            </div>
+                                                            {partner.isOnline && (
+                                                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-theme-surface"></div>
+                                                            )}
+                                                        </div>
+                                                        <div>
+                                                            <h3 className="font-bold text-xl group-hover:text-theme-primary transition-colors flex items-center gap-2">
+                                                                {partner.username}
+                                                                <span className="flex items-center text-yellow-500 text-sm font-semibold bg-yellow-500/10 px-2 py-0.5 rounded-full">
+                                                                    <Star size={12} className="fill-yellow-500 mr-1" />
+                                                                    {partner.rating?.toFixed(1) || '0.0'}
+                                                                </span>
+                                                            </h3>
+                                                            <p className="text-theme-muted text-sm font-medium truncate max-w-sm mt-1 opacity-80">
+                                                                {chat.lastMessage || <span className="italic opacity-60">Start the conversation...</span>}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-xs text-theme-muted flex flex-col items-end font-semibold opacity-70">
+                                                        <span className="flex items-center mb-1">
+                                                            <Clock className="w-3 h-3 mr-1.5" />
+                                                            {new Date(chat.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                {partner.isOnline && (
-                                                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-theme-surface"></div>
-                                                )}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Match History Section */}
+                        {historyChats.length > 0 && (
+                            <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+                                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-theme-muted/80">
+                                    <CheckCircle className="text-green-500" /> Match History
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {historyChats.map((chat, index) => {
+                                        const partner = getPartner(chat.participants);
+                                        return (
+                                            <div
+                                                key={chat._id}
+                                                className="bg-theme-surface/60 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 hover:bg-theme-surface transition-colors opacity-80 hover:opacity-100"
+                                            >
+                                                <div className="flex items-center space-x-4">
+                                                    <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-lg font-bold text-gray-500 dark:text-gray-400">
+                                                        {partner.username[0]?.toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-bold text-theme-text">{partner.username}</h3>
+                                                        <div className="flex items-center text-xs text-theme-muted mt-1">
+                                                            <Calendar className="w-3 h-3 mr-1" />
+                                                            Connected: {new Date(chat.updatedAt).toLocaleDateString()}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/* No message preview, just a static history item */}
                                             </div>
-                                            <div>
-                                                <h3 className="font-bold text-xl group-hover:text-theme-primary transition-colors flex items-center gap-2">
-                                                    {partner.username}
-                                                    <span className="flex items-center text-yellow-500 text-sm font-semibold bg-yellow-500/10 px-2 py-0.5 rounded-full">
-                                                        <Star size={12} className="fill-yellow-500 mr-1" />
-                                                        {partner.rating?.toFixed(1) || '0.0'}
-                                                    </span>
-                                                </h3>
-                                                <p className="text-theme-muted text-sm font-medium truncate max-w-sm mt-1 opacity-80">
-                                                    {chat.lastMessage || <span className="italic opacity-60">Start the conversation...</span>}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="text-xs text-theme-muted flex flex-col items-end font-semibold opacity-70">
-                                            <span className="flex items-center mb-1">
-                                                <Calendar className="w-3 h-3 mr-1.5" />
-                                                {new Date(chat.updatedAt).toLocaleDateString()}
-                                            </span>
-                                            <span>
-                                                {new Date(chat.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </Link>
-                            );
-                        })}
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
