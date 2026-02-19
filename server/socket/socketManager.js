@@ -171,17 +171,24 @@ module.exports = (io) => {
             try {
                 // Find participants to increment session count
                 const chat = await Chat.findById(roomId);
-                if (chat && !chat.isCompleted) {
-                    await User.updateMany(
-                        { _id: { $in: chat.participants } },
-                        { $inc: { sessionsCompleted: 1 } }
-                    );
-                    chat.isCompleted = true; // Mark chat as counted
-                    await chat.save();
-                    console.log(`[CHAT] Sessions incremented for both participants in room ${roomId}`);
+                if (chat) {
+                    if (!chat.isCompleted) {
+                        await User.updateMany(
+                            { _id: { $in: chat.participants } },
+                            { $inc: { sessionsCompleted: 1 } }
+                        );
+                        console.log(`[CHAT] Sessions incremented for both participants in room ${roomId}`);
+                    }
+
+                    // DELETE CHAT HISTORY
+                    console.log(`[CHAT] Deleting messages for room ${roomId}`);
+                    await Message.deleteMany({ chatId: roomId });
+
+                    console.log(`[CHAT] Deleting chat room ${roomId}`);
+                    await Chat.findByIdAndDelete(roomId);
                 }
             } catch (err) {
-                console.error("[CHAT] Error incrementing sessions:", err);
+                console.error("[CHAT] Error handling leave_room:", err);
             }
 
             socket.to(roomId).emit('session_ended', { roomId });
