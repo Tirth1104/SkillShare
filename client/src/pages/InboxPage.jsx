@@ -139,25 +139,15 @@ const InboxPage = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex gap-2 mt-2">
-                                                    <button
-                                                        onClick={() => navigate(`/chat/${chat._id}`)}
-                                                        className="flex-1 px-3 py-2 bg-theme-primary/10 hover:bg-theme-primary/20 text-theme-primary rounded-xl text-xs font-bold transition text-center"
-                                                    >
-                                                        Start Session
-                                                    </button>
-                                                    <button
-                                                        onClick={() => navigate('/feedback', {
-                                                            state: {
-                                                                partnerId: partner._id,
-                                                                username: partner.username,
-                                                                roomId: chat._id
-                                                            }
-                                                        })}
-                                                        className="flex-1 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl text-xs font-bold transition text-center"
-                                                    >
-                                                        End Session
-                                                    </button>
+                                                <div className="mt-3 space-y-1 text-xs text-theme-muted bg-theme-bg/50 p-3 rounded-xl">
+                                                    <div className="flex justify-between">
+                                                        <span>Session Started:</span>
+                                                        <span className="font-semibold">{new Date(chat.createdAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span>Session Ended:</span>
+                                                        <span className="font-semibold">{new Date(chat.updatedAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         );
