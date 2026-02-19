@@ -187,7 +187,7 @@ const ChatPage = () => {
         setShowModal(true);
     };
 
-    const confirmEndSession = () => {
+    const confirmEndSession = async () => {
         console.log('[CHAT] confirmEndSession clicked. Socket:', socket?.connected ? 'connected' : 'disconnected');
 
         const feedbackData = {
@@ -196,6 +196,16 @@ const ChatPage = () => {
             roomId
         };
 
+        // 1. Force delete via API (Reliable)
+        try {
+            await api.delete(`/chats/${roomId}`);
+            console.log('[CHAT] Chat deleted via API');
+        } catch (error) {
+            console.error('[CHAT] Error deleting chat via API:', error);
+            // Continue anyway to ensure UI navigation
+        }
+
+        // 2. Notify partner via Socket (Best Effort)
         if (socket && socket.connected) {
             // Emitting to server with timeout fallback
             console.log('[CHAT] Emitting leave_room to server...');
@@ -203,9 +213,9 @@ const ChatPage = () => {
             // Set a safety timeout in case server doesn't respond
             const timeout = setTimeout(() => {
                 console.log('[CHAT] leave_room acknowledgment timed out. Navigating anyway...');
-                toast.success('Session ended (offline)');
+                toast.success('Session ended');
                 navigate('/feedback', { state: feedbackData });
-            }, 2000);
+            }, 1000); // reduced timeout since API is done
 
             socket.emit('leave_room', { roomId }, () => {
                 console.log('[CHAT] Received leave_room acknowledgment from server');
