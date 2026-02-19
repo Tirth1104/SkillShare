@@ -168,8 +168,10 @@ module.exports = (io) => {
         });
 
         socket.on('leave_room', async ({ roomId }, callback) => {
+            console.log(`[CHAT] leave_room triggered for Room: ${roomId} by User: ${socket.id}`);
+
+            // 1. Increment session count (Best effort)
             try {
-                // Find participants to increment session count
                 const chat = await Chat.findById(roomId);
                 if (chat) {
                     if (!chat.isCompleted) {
@@ -179,18 +181,25 @@ module.exports = (io) => {
                         );
                         console.log(`[CHAT] Sessions incremented for both participants in room ${roomId}`);
                     }
-
-                    // DELETE CHAT HISTORY
-                    console.log(`[CHAT] Deleting messages for room ${roomId}`);
-                    await Message.deleteMany({ chatId: roomId });
-
-                    console.log(`[CHAT] Deleting chat room ${roomId}`);
-                    await Chat.findByIdAndDelete(roomId);
+                } else {
+                    console.log(`[CHAT] Chat not found for increment session (might be already deleted): ${roomId}`);
                 }
             } catch (err) {
-                console.error("[CHAT] Error handling leave_room:", err);
+                console.error("[CHAT] Error incrementing sessions:", err);
             }
 
+            // 2. DELETE CHAT HISTORY (Critical - Force Delete)
+            try {
+                const messageDeleteResult = await Message.deleteMany({ chatId: roomId });
+                console.log(`[CHAT] Messages deleted for room ${roomId}. Count: ${messageDeleteResult.deletedCount}`);
+
+                const chatDeleteResult = await Chat.findByIdAndDelete(roomId);
+                console.log(`[CHAT] Chat room deleted: ${roomId}. Result: ${chatDeleteResult ? 'Success' : 'Not Found/Already Deleted'}`);
+            } catch (err) {
+                console.error("[CHAT] CRITICAL ERROR deleting chat/messages:", err);
+            }
+
+            // 3. Notify and cleanup
             socket.to(roomId).emit('session_ended', { roomId });
             socket.leave(roomId);
             socket.roomId = null;
