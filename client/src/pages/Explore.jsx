@@ -46,15 +46,15 @@ const Explore = () => {
             <Navbar />
 
             <div className="container mx-auto px-4 py-8 max-w-6xl">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4 animate-fade-in-up">
                     <div>
-                        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-theme-primary to-purple-600 dark:from-theme-primary dark:to-purple-500 text-transparent bg-clip-text">
+                        <h1 className="text-5xl font-extrabold gradient-text-primary tracking-tight pb-2">
                             Explore Skills
                         </h1>
-                        <p className="text-theme-muted mt-2 font-medium">Find the perfect partner to exchange knowledge with.</p>
+                        <p className="text-theme-muted mt-2 font-medium text-lg">Find the perfect partner to exchange knowledge with.</p>
                     </div>
 
-                    <div className="relative w-full md:w-96">
+                    <div className="relative w-full md:w-96 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted" size={20} />
                         <input
                             type="text"
@@ -72,8 +72,12 @@ const Explore = () => {
                     </div>
                 ) : filteredUsers.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredUsers.map((user) => (
-                            <div key={user._id} className="bg-theme-surface rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all group relative overflow-hidden">
+                        {filteredUsers.map((user, index) => (
+                            <div
+                                key={user._id}
+                                className="bg-theme-surface rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all group relative overflow-hidden animate-fade-in-up hover-lift"
+                                style={{ animationDelay: `${index * 100 + 200}ms` }}
+                            >
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-center space-x-3">
                                         <div className="w-12 h-12 bg-gradient-to-br from-theme-primary to-purple-500 rounded-2xl flex items-center justify-center text-white shadow-lg">
@@ -84,7 +88,7 @@ const Explore = () => {
                                                 {user.username}
                                             </h3>
                                             <div className="flex items-center text-yellow-500 text-sm font-semibold">
-                                                < Star size={14} className="fill-yellow-500 mr-1" />
+                                                <Star size={14} className="fill-yellow-500 mr-1" />
                                                 {user.rating?.toFixed(1) || '0.0'}
                                                 <span className="text-theme-muted font-normal ml-2">({user.sessionsCompleted || 0} sessions)</span>
                                             </div>
@@ -118,7 +122,7 @@ const Explore = () => {
 
                                 <button
                                     onClick={() => handleInvite(user)}
-                                    className="w-full py-3 bg-theme-primary text-white font-bold rounded-2xl hover:opacity-90 transition duration-200 flex items-center justify-center space-x-2 shadow-sm"
+                                    className="w-full py-3 bg-theme-primary text-white font-bold rounded-2xl hover:opacity-90 transition duration-200 flex items-center justify-center space-x-2 shadow-sm transform active:scale-95"
                                 >
                                     <MessageSquare size={18} />
                                     <span>Send Invite</span>
@@ -127,7 +131,7 @@ const Explore = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-20 bg-theme-surface rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
+                    <div className="text-center py-20 bg-theme-surface rounded-3xl border border-dashed border-gray-300 dark:border-gray-700 animate-fade-in-up">
                         <p className="text-theme-muted text-xl font-medium">No partners found matching "{searchTerm}"</p>
                         <button onClick={() => setSearchTerm('')} className="mt-4 text-theme-primary hover:underline">Clear search</button>
                     </div>
