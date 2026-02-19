@@ -73,7 +73,7 @@ const MatchPage = () => {
         <div className="min-h-screen bg-theme-bg text-theme-text transition-colors duration-200">
             <Navbar />
             <div className="flex flex-col items-center justify-center h-[80vh] text-center px-4">
-                <h1 className="text-4xl font-bold mb-8 text-theme-primary dark:text-white">
+                <h1 className="text-5xl font-extrabold mb-8 gradient-text-primary tracking-tight pb-2">
                     Find Your Skill Match
                 </h1>
 

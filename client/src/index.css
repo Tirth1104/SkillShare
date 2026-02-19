@@ -63,10 +63,61 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.bg-theme-bg { background-color: var(--color-bg); }
-.bg-theme-surface { background-color: var(--color-surface); }
-.text-theme-text { color: var(--color-text); }
-.text-theme-muted { color: var(--color-text-muted); }
-.border-theme-border { border-color: var(--color-text-muted); }
-.text-theme-primary { color: var(--color-primary); }
-.bg-theme-primary { background-color: var(--color-primary); }
+.bg-theme-bg {
+  background-color: var(--color-bg);
+}
+
+.bg-theme-surface {
+  background-color: var(--color-surface);
+}
+
+.text-theme-text {
+  color: var(--color-text);
+}
+
+.text-theme-muted {
+  color: var(--color-text-muted);
+}
+
+.border-theme-border {
+  border-color: var(--color-text-muted);
+}
+
+.text-theme-primary {
+  color: var(--color-primary);
+}
+
+.bg-theme-primary {
+  background-color: var(--color-primary);
+}
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% auto;
+  animation: gradient-x 3s linear infinite;
+}
+
+.gradient-text-primary {
+  background: linear-gradient(to right,
+      var(--color-primary) 0%,
+      #a855f7 50%,
+      var(--color-primary) 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-x 3s linear infinite;
+}
