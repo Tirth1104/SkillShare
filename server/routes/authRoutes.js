@@ -9,5 +9,6 @@ router.post('/logout', authController.logout);
 router.get('/profile', auth, authController.getProfile);
 router.put('/profile', auth, authController.updateProfile);
 router.get('/users', auth, authController.getUsers);
+router.get('/skills', auth, authController.getSkills);
 
 module.exports = router;
