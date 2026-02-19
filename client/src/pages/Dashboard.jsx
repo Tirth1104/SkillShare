@@ -158,7 +158,7 @@ const Dashboard = () => {
                     ) : (
                         <div className="flex items-center space-x-3">
                             <span className="text-3xl font-bold">{user?.username}</span>
-                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-gray-500 hover:text-blue-500 transition">
+                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-gray-500 hover:text-primary-500 transition">
                                 <Edit2 size={20} />
                             </button>
                         </div>
@@ -168,14 +168,14 @@ const Dashboard = () => {
                 {usernameError && <p className="text-red-500 mb-6 -mt-6">{usernameError}</p>}
 
                 {/* Discover New Skills Discovery Card */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 mb-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01]">
+                <div className="bg-gradient-to-r from-primary-600 to-purple-600 rounded-2xl p-6 mb-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01]">
                     <div className="text-center md:text-left">
                         <h2 className="text-2xl font-bold mb-1">Discover New Skills 🚀</h2>
                         <p className="opacity-90">Browse our public directory to find the perfect partner for your next exchange.</p>
                     </div>
                     <Link
                         to="/explore"
-                        className="bg-white text-blue-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg whitespace-nowrap"
+                        className="bg-white text-primary-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg whitespace-nowrap"
                     >
                         Explore Now
                     </Link>
@@ -194,7 +194,7 @@ const Dashboard = () => {
                         <h3 className="text-xl font-semibold mb-2 text-orange-600 dark:text-orange-400">Skills Taught</h3>
                         <div className="flex flex-wrap gap-2 mt-2 mb-4">
                             {user?.skillsTeach?.map((skill, i) => (
-                                <span key={i} className="bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-white px-2 py-1 rounded text-sm">{skill}</span>
+                                <span key={i} className="bg-primary-100 dark:bg-primary-600 text-primary-800 dark:text-white px-2 py-1 rounded text-sm">{skill}</span>
                             )) || <span className="text-gray-500">None</span>}
                         </div>
                         <form onSubmit={handleAddSkillTeach} className="flex gap-2">
@@ -205,7 +205,7 @@ const Dashboard = () => {
                                 placeholder="Add skill..."
                                 className="w-full px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none"
                             />
-                            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">+</button>
+                            <button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">+</button>
                         </form>
                     </div>
                 </div>
