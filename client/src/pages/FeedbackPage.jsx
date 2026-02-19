@@ -17,7 +17,9 @@ const FeedbackPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (rating === 0) return alert('Please provide a rating');
+        if (!partnerId || partnerId === 'unknown') {
+            return alert('Missing partner information. Cannot submit feedback.');
+        }
 
         try {
             await api.post('/feedback', {
@@ -29,26 +31,27 @@ const FeedbackPage = () => {
             navigate('/dashboard');
         } catch (err) {
             console.error(err);
-            alert('Failed to submit feedback');
+            const message = err.response?.data?.message || 'Failed to submit feedback';
+            alert(message);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+        <div className="min-h-screen bg-theme-bg text-theme-text transition-all duration-300">
             <Navbar />
-            <div className="flex items-center justify-center h-[80vh]">
-                <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full text-center transition-colors">
-                    <h2 className="text-3xl font-bold mb-4 text-purple-600 dark:text-purple-400">Session Feedback</h2>
-                    <p className="mb-6 text-gray-600 dark:text-gray-300">How was your session with <span className="font-bold text-gray-900 dark:text-white">{username}</span>?</p>
+            <div className="flex items-center justify-center min-h-[85vh] p-4">
+                <div className="bg-theme-surface p-8 md:p-10 rounded-3xl shadow-2xl max-w-md w-full text-center border border-gray-100 dark:border-gray-800 transition-all">
+                    <h2 className="text-3xl font-bold mb-4 text-theme-primary">Session Feedback</h2>
+                    <p className="mb-6 text-theme-muted">How was your session with <span className="font-bold text-theme-text">{username}</span>?</p>
 
-                    <div className="flex justify-center space-x-2 mb-6">
+                    <div className="flex justify-center space-x-2 mb-8">
                         {[...Array(5)].map((_, index) => {
                             const ratingValue = index + 1;
                             return (
                                 <Star
                                     key={index}
-                                    size={32}
-                                    className={`cursor-pointer transition ${ratingValue <= (hover || rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400 dark:text-gray-600'}`}
+                                    size={40}
+                                    className={`cursor-pointer transition transform hover:scale-110 ${ratingValue <= (hover || rating) ? 'fill-yellow-400 text-yellow-400' : 'text-theme-muted opacity-30'}`}
                                     onClick={() => setRating(ratingValue)}
                                     onMouseEnter={() => setHover(ratingValue)}
                                     onMouseLeave={() => setHover(0)}
@@ -58,7 +61,7 @@ const FeedbackPage = () => {
                     </div>
 
                     <textarea
-                        className="w-full bg-gray-100 dark:bg-gray-700 rounded p-3 text-gray-900 dark:text-white mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-300 dark:border-gray-600 transition-colors"
+                        className="w-full bg-theme-bg rounded-2xl p-4 text-theme-text mb-6 focus:outline-none focus:ring-2 focus:ring-theme-primary/50 border border-theme-border/10 shadow-inner transition-all resize-none"
                         rows="4"
                         placeholder="Share your experience (optional)..."
                         value={comment}
@@ -67,12 +70,15 @@ const FeedbackPage = () => {
 
                     <button
                         onClick={handleSubmit}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded transition transform hover:scale-105"
+                        className="w-full bg-theme-primary hover:opacity-90 text-white font-bold py-4 rounded-2xl transition transform hover:scale-[1.02] shadow-xl mb-4"
                     >
                         Submit Feedback
                     </button>
-                    <button onClick={() => navigate('/dashboard')} className="mt-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm underline">
-                        Skip
+                    <button
+                        onClick={() => navigate('/dashboard')}
+                        className="text-theme-muted hover:text-theme-text text-sm transition-colors font-medium"
+                    >
+                        Skip for now
                     </button>
                 </div>
             </div>

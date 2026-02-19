@@ -137,8 +137,9 @@ const Dashboard = () => {
         <div className="min-h-screen bg-theme-bg text-theme-text transition-colors duration-200">
             <Navbar />
             <div className="container mx-auto p-8">
-                <div className="mb-8 flex items-center space-x-4">
-                    <h1 className="text-3xl font-bold">Welcome,</h1>
+{/* [0] Welcome Header Section */}
+                <div className="mb-10 flex items-center space-x-4 animate-text-focus-in">
+                    <h1 className="text-4xl font-extrabold tracking-tight">Welcome,</h1>
 
                     {isEditingUsername ? (
                         <div className="flex items-center space-x-2">
@@ -146,55 +147,55 @@ const Dashboard = () => {
                                 type="text"
                                 value={newUsername}
                                 onChange={(e) => setNewUsername(e.target.value)}
-                                className="px-2 py-1 rounded bg-theme-surface border border-gray-300 dark:border-gray-600 focus:outline-none text-theme-text"
+                                className="px-3 py-1.5 rounded-xl bg-theme-surface border border-gray-300 dark:border-gray-600 focus:outline-none text-theme-text shadow-sm"
                             />
-                            <button onClick={handleUpdateUsername} className="text-green-600 hover:text-green-500 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
+                            <button onClick={handleUpdateUsername} className="text-green-600 hover:text-green-500 bg-green-100 dark:bg-green-900/30 p-2 rounded-xl transition">
                                 <Check size={20} />
                             </button>
-                            <button onClick={cancelEditUsername} className="text-red-600 hover:text-red-500 bg-red-100 dark:bg-red-900/30 p-1 rounded-full">
+                            <button onClick={cancelEditUsername} className="text-red-600 hover:text-red-500 bg-red-100 dark:bg-red-900/30 p-2 rounded-xl transition">
                                 <X size={20} />
                             </button>
                         </div>
                     ) : (
                         <div className="flex items-center space-x-3">
-                            <span className="text-3xl font-bold">{user?.username}</span>
-                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-theme-muted hover:text-theme-primary transition">
-                                <Edit2 size={20} />
+                            <span className="text-4xl font-extrabold gradient-text-primary pb-1">{user?.username}</span>
+                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-theme-muted hover:text-theme-primary transition p-2 hover:bg-theme-surface rounded-xl">
+                                <Edit2 size={24} />
                             </button>
                         </div>
                     )}
-                    <span className="text-3xl">👋</span>
+                    <span className="text-4xl animate-bounce">👋</span>
                 </div>
                 {usernameError && <p className="text-red-500 mb-6 -mt-6">{usernameError}</p>}
 
-                {/* Discover New Skills Discovery Card */}
-                <div className="bg-gradient-to-r from-theme-primary to-purple-600 rounded-2xl p-6 mb-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01]">
+{/* Discover New Skills Discovery Card */}
+                <div className="bg-gradient-to-r from-theme-primary to-purple-600 rounded-3xl p-8 mb-10 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01] animate-fade-in-up [--delay:200ms]">
                     <div className="text-center md:text-left">
-                        <h2 className="text-2xl font-bold mb-1 text-white">Discover New Skills 🚀</h2>
-                        <p className="opacity-90 text-white">Browse our public directory to find the perfect partner for your next exchange.</p>
+                        <h2 className="text-3xl font-bold mb-2 text-white">Discover New Skills 🚀</h2>
+                        <p className="opacity-90 text-lg">Browse our public directory to find the perfect partner for your next exchange.</p>
                     </div>
                     <Link
                         to="/explore"
-                        className="bg-white text-theme-primary px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg whitespace-nowrap"
+                        className="bg-white text-theme-primary px-10 py-4 rounded-2xl font-bold hover:bg-gray-100 transition shadow-xl whitespace-nowrap"
                     >
                         Explore Now
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
-                        <h3 className="text-xl font-semibold mb-2 text-theme-primary">Reputation Score</h3>
-                        <p className="text-4xl font-bold">{user?.rating?.toFixed(1) || 'N/A'}</p>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 animate-fade-in-up [--delay:400ms]">
+                    <div className="bg-theme-surface p-6 rounded-3xl shadow-lg transition-all border border-gray-100 dark:border-gray-800 hover-lift">
+                        <h3 className="text-xl font-bold mb-2 text-theme-primary">Reputation Score</h3>
+                        <p className="text-5xl font-extrabold tracking-tight">{user?.rating?.toFixed(1) || 'N/A'}</p>
                     </div>
-                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
-                        <h3 className="text-xl font-semibold mb-2 text-purple-500">Sessions Completed</h3>
-                        <p className="text-4xl font-bold">{user?.sessionsCompleted || 0}</p>
+                    <div className="bg-theme-surface p-6 rounded-3xl shadow-lg transition-all border border-gray-100 dark:border-gray-800 hover-lift">
+                        <h3 className="text-xl font-bold mb-2 text-purple-500">Sessions Completed</h3>
+                        <p className="text-5xl font-extrabold tracking-tight">{user?.sessionsCompleted || 0}</p>
                     </div>
-                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
-                        <h3 className="text-xl font-semibold mb-2 text-orange-500">Skills Taught</h3>
-                        <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                    <div className="bg-theme-surface p-6 rounded-3xl shadow-lg transition-all border border-gray-100 dark:border-gray-800 hover-lift">
+                        <h3 className="text-xl font-bold mb-3 text-orange-500">Skills Taught</h3>
+                        <div className="flex flex-wrap gap-2 mt-2 mb-6">
                             {user?.skillsTeach?.map((skill, i) => (
-                                <span key={i} className="bg-theme-primary/20 text-theme-primary border border-theme-primary/30 px-2 py-1 rounded text-sm font-medium">{skill}</span>
+                                <span key={i} className="bg-theme-primary/10 text-theme-primary border border-theme-primary/20 px-3 py-1 rounded-xl text-sm font-bold">{skill}</span>
                             )) || <span className="text-theme-muted">None</span>}
                         </div>
                         <form onSubmit={handleAddSkillTeach} className="flex gap-2">
@@ -203,9 +204,9 @@ const Dashboard = () => {
                                 value={newSkillTeach}
                                 onChange={(e) => setNewSkillTeach(e.target.value)}
                                 placeholder="Add skill..."
-                                className="w-full px-2 py-1 rounded bg-theme-bg border border-gray-300 dark:border-gray-600 focus:outline-none text-theme-text placeholder-theme-muted"
+                                className="w-full px-4 py-2 rounded-xl bg-theme-bg border border-gray-100 dark:border-gray-700 focus:outline-none text-theme-text placeholder-theme-muted shadow-inner"
                             />
-                            <button type="submit" className="bg-theme-primary hover:opacity-90 text-white px-3 py-1 rounded">+</button>
+                            <button type="submit" className="bg-theme-primary hover:opacity-90 text-white px-4 py-2 rounded-xl font-bold transition shadow-md">+</button>
                         </form>
                     </div>
                 </div>

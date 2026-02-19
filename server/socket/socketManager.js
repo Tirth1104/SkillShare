@@ -167,37 +167,37 @@ module.exports = (io) => {
             socket.join(roomId);
         });
 
-        socket.on('leave_room', async ({ roomId }, callback) => {
-            console.log(`[CHAT] leave_room triggered for Room: ${roomId} by User: ${socket.id}`);
-
+        const cleanupRoom = async (roomId) => {
+            console.log(`[CHAT] Cleaning up Room: ${roomId}`);
             try {
+                // 1. Increment session count (if not already completed)
                 const chat = await Chat.findById(roomId);
                 if (chat && !chat.isCompleted) {
                     await User.updateMany(
                         { _id: { $in: chat.participants } },
                         { $inc: { sessionsCompleted: 1 } }
                     );
-                    chat.isCompleted = true; // Mark chat as counted
+                    chat.isCompleted = true;
                     await chat.save();
-                    console.log(`[CHAT] Sessions incremented for both participants in room ${roomId}`);
+                    console.log(`[CHAT] Sessions incremented for room ${roomId}`);
                 }
-            } catch (err) {
-                console.error("[CHAT] Error incrementing sessions:", err);
-            }
 
-            // 2. DELETE CHAT HISTORY (Critical - Force Delete)
-            try {
+                // 2. DELETE CHAT HISTORY (Critical - Force Delete)
                 const messageDeleteResult = await Message.deleteMany({ chatId: roomId });
                 console.log(`[CHAT] Messages deleted for room ${roomId}. Count: ${messageDeleteResult.deletedCount}`);
 
                 const chatDeleteResult = await Chat.findByIdAndDelete(roomId);
-                console.log(`[CHAT] Chat room deleted: ${roomId}. Result: ${chatDeleteResult ? 'Success' : 'Not Found/Already Deleted'}`);
-            } catch (err) {
-                console.error("[CHAT] CRITICAL ERROR deleting chat/messages:", err);
-            }
+                console.log(`[CHAT] Chat room deleted: ${roomId}. Result: ${chatDeleteResult ? 'Success' : 'Not Found'}`);
 
-            // 3. Notify and cleanup
-            socket.to(roomId).emit('session_ended', { roomId });
+                // 3. Notify partner
+                io.to(roomId).emit('session_ended', { roomId });
+            } catch (err) {
+                console.error("[CHAT] CRITICAL ERROR during cleanup:", err);
+            }
+        };
+
+        socket.on('leave_room', async ({ roomId }, callback) => {
+            await cleanupRoom(roomId);
             socket.leave(roomId);
             socket.roomId = null;
             if (callback) callback();
@@ -273,10 +273,10 @@ module.exports = (io) => {
         socket.on('disconnect', async () => {
             console.log('User disconnected:', socket.id);
 
-            // If user was in a chat room, notify the other participant
+            // If user was in a chat room, clean it up
             if (socket.roomId) {
-                console.log(`[CHAT] User ${socket.id} disconnected from room ${socket.roomId}, broadcasting session_ended`);
-                socket.to(socket.roomId).emit('session_ended', { roomId: socket.roomId });
+                console.log(`[CHAT] User ${socket.id} disconnected from room ${socket.roomId}. Triggering full cleanup.`);
+                await cleanupRoom(socket.roomId);
             }
 
             // Remove from waiting queue

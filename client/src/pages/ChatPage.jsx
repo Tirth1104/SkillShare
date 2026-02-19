@@ -92,7 +92,8 @@ const ChatPage = () => {
             if (partnerRef.current) return;
             try {
                 const { data } = await api.get(`/chats/${roomId}/info`);
-                const otherUser = data.participants.find(p => p._id !== user._id);
+                const currentUserId = (user?._id || user?.id)?.toString();
+                const otherUser = data.participants.find(p => p._id?.toString() !== currentUserId);
                 if (otherUser) {
                     setPartner({
                         username: otherUser.username,
@@ -193,6 +194,7 @@ const ChatPage = () => {
 
         // Immediate UI feedback
         setMessages([]);
+        setSelectedIds([]);
         setShowModal(false);
 
         const feedbackData = {
@@ -249,9 +251,9 @@ const ChatPage = () => {
                             {displayPartner.username[0]}
                         </div>
                         <div>
-                            <h2 className="font-bold text-lg">
-                                {displayPartner.username} {displayPartner.rating !== undefined && (
-                                    <span className="text-yellow-500 text-sm">★ {displayPartner.rating?.toFixed(1) || '0.0'}</span>
+                            <h2 className="font-extrabold text-xl tracking-tight">
+                                <span className="gradient-text-primary">{displayPartner.username}</span> {displayPartner.rating !== undefined && (
+                                    <span className="text-yellow-500 text-sm ml-2">★ {displayPartner.rating?.toFixed(1) || '0.0'}</span>
                                 )}
                             </h2>
                             <p className={`text-xs font-semibold ${displayPartner.isOnline ? 'text-green-500' : 'text-theme-muted'}`}>
@@ -306,20 +308,22 @@ const ChatPage = () => {
                                         className="w-5 h-5 rounded border-gray-300 text-theme-primary focus:ring-theme-primary cursor-pointer"
                                     />
                                 )}
-                                <div className={`group max-w-[80%] min-w-[50px] p-3 rounded-2xl shadow-sm ${msg.sender?.toLowerCase() === user.username?.toLowerCase() ? 'bg-theme-primary text-white rounded-tr-none' : 'bg-theme-surface text-theme-text rounded-tl-none border border-gray-100 dark:border-gray-700'} ${isSelected ? 'ring-2 ring-theme-primary' : ''}`}>
-                                    <div className="flex items-start justify-between">
-                                        <p className="whitespace-pre-wrap break-words">{msg.content || msg.message}</p>
+                                <div className={`group max-w-[85%] min-w-[60px] p-4 rounded-3xl shadow-sm animate-fade-in-up ${msg.sender?.toLowerCase() === user.username?.toLowerCase() ? 'bg-theme-primary text-white rounded-tr-none' : 'bg-theme-surface text-theme-text rounded-tl-none border border-gray-100 dark:border-gray-800'} ${isSelected ? 'ring-4 ring-theme-primary/30' : ''}`}>
+                                    <div className="flex items-start justify-between gap-3">
+                                        <p className="whitespace-pre-wrap break-words leading-relaxed font-medium">{msg.content || msg.message}</p>
                                         {!selectionMode && (msg._id || msg.id) && msg.sender?.toLowerCase() === user.username?.toLowerCase() && (
                                             <button
                                                 onClick={() => deleteMessage(msg._id || msg.id)}
-                                                className="ml-2 text-theme-bg hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="ml-2 text-white/50 hover:text-white transition-all opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded-lg"
                                                 title="Delete message"
                                             >
-                                                <Trash2 size={14} />
+                                                <Trash2 size={16} />
                                             </button>
                                         )}
                                     </div>
-                                    <p className={`text-[10px] opacity-70 mt-1 text-right ${msg.sender?.toLowerCase() === user.username?.toLowerCase() ? 'text-white/80' : 'text-theme-muted'}`}>{msg.timestamp}</p>
+                                    <div className="flex items-center justify-end mt-2 opacity-60">
+                                        <p className="text-[10px] uppercase font-bold tracking-widest">{msg.timestamp}</p>
+                                    </div>
                                 </div>
                             </div>
                         );

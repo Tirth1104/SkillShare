@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { MessageSquare, Calendar } from 'lucide-react';
+import { MessageSquare, Calendar, Star } from 'lucide-react';
 
 const InboxPage = () => {
     const { user } = useAuth();
@@ -26,14 +26,15 @@ const InboxPage = () => {
     }, []);
 
     const getPartner = (participants) => {
-        return participants.find(p => p._id !== user._id) || { username: 'Unknown' };
+        const currentUserId = (user?._id || user?.id)?.toString();
+        return participants.find(p => p._id?.toString() !== currentUserId) || { username: 'Unknown' };
     };
 
     return (
         <div className="min-h-screen bg-theme-bg text-theme-text font-sans transition-colors duration-200">
             <Navbar />
             <div className="container mx-auto px-4 py-8 max-w-4xl">
-                <h1 className="text-4xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-theme-primary to-purple-500">
+                <h1 className="text-5xl font-extrabold mb-10 gradient-text-primary tracking-tight pb-2 animate-text-focus-in">
                     Your Inbox
                 </h1>
 
@@ -42,7 +43,7 @@ const InboxPage = () => {
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-theme-primary"></div>
                     </div>
                 ) : chats.length === 0 ? (
-                    <div className="bg-theme-surface rounded-2xl p-16 text-center border border-gray-100 dark:border-gray-700 shadow-xl">
+                    <div className="bg-theme-surface rounded-3xl p-16 text-center border border-gray-100 dark:border-gray-800 shadow-xl animate-fade-in-up">
                         <MessageSquare className="mx-auto h-20 w-20 text-theme-muted mb-6 opacity-30" />
                         <h3 className="text-2xl font-bold text-theme-text mb-2">No conversations yet</h3>
                         <p className="text-theme-muted font-medium mb-8">Find a match to start exchanging skills!</p>
@@ -52,14 +53,15 @@ const InboxPage = () => {
                     </div>
                 ) : (
                     <div className="grid gap-5">
-                        {chats.map(chat => {
+                        {chats.map((chat, index) => {
                             const partner = getPartner(chat.participants);
                             return (
                                 <Link
                                     key={chat._id}
                                     to={`/chat/${chat._id}`}
                                     state={{ partner: { username: partner.username, id: partner._id } }}
-                                    className="block bg-theme-surface hover:brightness-105 border border-gray-100 dark:border-gray-700 rounded-2xl p-5 transition-all hover:border-theme-primary/40 hover:shadow-2xl group shadow-md"
+                                    className="block bg-theme-surface border border-gray-100 dark:border-gray-800 rounded-3xl p-6 transition-all shadow-md group hover-lift hover:border-theme-primary/40 animate-fade-in-up"
+                                    style={{ animationDelay: `${index * 100}ms` }}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-5">

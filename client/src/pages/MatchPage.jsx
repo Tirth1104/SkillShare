@@ -77,34 +77,39 @@ const MatchPage = () => {
                     Find Your Skill Match
                 </h1>
 
-                <div className="bg-theme-surface p-8 rounded-xl shadow-2xl max-w-lg w-full transition-colors border border-gray-100 dark:border-gray-700">
-                    <div className="mb-6">
-                        <p className="text-theme-muted mb-2 font-medium">You teach:</p>
-                        <div className="flex flex-wrap gap-2 justify-center">
-                            {user?.skillsTeach?.map(s => <span key={s} className="bg-theme-primary/10 text-theme-primary border border-theme-primary/20 px-3 py-1 rounded-full text-sm font-semibold">{s}</span>)}
+                <div className="bg-theme-surface p-8 rounded-3xl shadow-2xl max-w-lg w-full mb-12 border border-gray-100 dark:border-gray-800 animate-fade-in-up">
+                    <div className="mb-8">
+                        <h3 className="text-theme-primary font-bold text-sm uppercase tracking-widest mb-3">You teach:</h3>
+                        <div className="flex flex-wrap justify-center gap-2">
+                            {user?.skillsTeach?.map((skill, i) => (
+                                <span key={i} className="bg-theme-primary/10 text-theme-primary border border-theme-primary/20 px-4 py-1.5 rounded-2xl text-sm font-bold animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>{skill}</span>
+                            ))}
                         </div>
                     </div>
-                    <div className="mb-8">
-                        <p className="text-theme-muted mb-2 font-medium">You want to learn:</p>
-                        <div className="flex flex-wrap gap-2 justify-center">
-                            {user?.skillsLearn?.map(s => <span key={s} className="bg-purple-500/10 text-purple-500 border border-purple-500/20 px-3 py-1 rounded-full text-sm font-semibold">{s}</span>)}
+
+                    <div className="mb-10">
+                        <h3 className="text-purple-500 font-bold text-sm uppercase tracking-widest mb-3">You want to learn:</h3>
+                        <div className="flex flex-wrap justify-center gap-2">
+                            {user?.skillsLearn?.map((skill, i) => (
+                                <span key={i} className="bg-purple-500/10 text-purple-500 border border-purple-500/20 px-4 py-1.5 rounded-2xl text-sm font-bold animate-fade-in-up" style={{ animationDelay: `${i * 100 + 300}ms` }}>{skill}</span>
+                            ))}
                         </div>
                     </div>
 
                     {status === 'idle' && (
                         <button
                             onClick={findMatch}
-                            className="w-full py-4 text-xl font-bold bg-theme-primary hover:opacity-90 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
+                            className="bg-theme-primary hover:opacity-90 text-white px-12 py-4 rounded-2xl font-black text-lg transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.03] w-full"
                         >
                             Find Match
                         </button>
                     )}
 
                     {status === 'searching' && (
-                        <div className="animate-pulse">
-                            <div className="w-16 h-16 border-4 border-t-theme-primary border-r-purple-500 border-b-theme-primary border-l-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                            <p className="text-xl font-semibold mb-4 text-theme-text dark:text-white">Searching for a partner...</p>
-                            <button onClick={cancelSearch} className="text-red-500 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200 underline font-medium">Cancel Search</button>
+                        <div className="animate-fade-in-up">
+                            <div className="w-16 h-16 border-4 border-t-theme-primary border-r-purple-500 border-b-theme-primary border-l-purple-500 rounded-full animate-spin mx-auto mb-6"></div>
+                            <p className="text-xl font-bold mb-4 text-theme-text animate-pulse">Searching for a partner...</p>
+                            <button onClick={cancelSearch} className="text-red-500 hover:text-red-700 dark:text-red-400 font-bold transition hover:underline">Cancel Search</button>
                         </div>
                     )}
 

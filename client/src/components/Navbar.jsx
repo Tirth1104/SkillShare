@@ -24,7 +24,7 @@ const Navbar = () => {
         <>
             <nav className="bg-theme-surface p-4 shadow-md transition-colors duration-200 relative z-10 border-b border-gray-200 dark:border-gray-700">
                 <div className="container mx-auto flex justify-between items-center">
-                    <Link to="/dashboard" className="text-2xl font-bold text-theme-primary">
+                    <Link to="/dashboard" className="text-3xl font-black tracking-tighter gradient-text-primary animate-text-focus-in">
                         SkillShare
                     </Link>
                     <div className="flex items-center space-x-6">
