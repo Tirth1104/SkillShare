@@ -65,6 +65,7 @@ const ChatPage = () => {
         });
 
         newSocket.on('session_ended', () => {
+            setMessages([]); // Clear messages immediately
             toast.error('The other user has ended the session.', { id: 'session-end' });
             setTimeout(() => {
                 navigate('/feedback', {
@@ -83,112 +84,14 @@ const ChatPage = () => {
         };
     }, [roomId]); // ONLY depend on roomId
 
-    // Separate Effect for data fetching
-    useEffect(() => {
-        // Fetch chat history
-        const fetchHistory = async () => {
-            try {
-                const { data } = await api.get(`/chats/${roomId}`);
-                setMessages(data);
-            } catch (error) {
-                console.error("Error fetching chat history:", error);
-            }
-        };
-
-        // Fetch partner info if missing
-        const fetchPartnerInfo = async () => {
-            if (partnerRef.current) return; // Use partnerRef here
-            try {
-                const { data } = await api.get(`/chats/${roomId}/info`);
-                const otherUser = data.participants.find(p => p._id !== user._id);
-                if (otherUser) {
-                    setPartner({
-                        username: otherUser.username,
-                        id: otherUser._id,
-                        rating: otherUser.rating,
-                        isOnline: otherUser.isOnline
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching partner info:", error);
-            }
-        };
-
-        fetchHistory();
-        fetchPartnerInfo();
-
-        if (state?.partner) {
-            toast.success(`Joined chat with ${state.partner.username}`, { id: `join-${roomId}` });
-        }
-    }, [roomId]);
-
-
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
-
-    const addEmoji = (emoji) => {
-        setNewMessage(prev => prev + emoji);
-    };
-
-    const sendMessage = (e) => {
-        e.preventDefault();
-        const trimmedMessage = newMessage.trim();
-        if (!trimmedMessage || !socket) return;
-
-        const messageData = {
-            roomId,
-            content: trimmedMessage,
-            sender: user.username,
-            timestamp: new Date().toLocaleTimeString()
-        };
-
-        socket.emit('send_message', messageData);
-        setNewMessage('');
-        setShowEmojiPicker(false);
-    };
-
-    const deleteMessage = async (messageId) => {
-        try {
-            await api.delete(`/chats/messages/${messageId}`);
-            socket.emit('delete_message', { roomId, messageId });
-            setMessages(prev => prev.filter(msg => (msg._id || msg.id) !== messageId));
-            toast.success('Message deleted');
-        } catch (error) {
-            console.error("Error deleting message:", error);
-            toast.error('Failed to delete message');
-        }
-    };
-
-    const toggleMessageSelection = (messageId) => {
-        setSelectedIds(prev =>
-            prev.includes(messageId)
-                ? prev.filter(id => id !== messageId)
-                : [...prev, messageId]
-        );
-    };
-
-    const bulkDeleteMessages = async () => {
-        if (selectedIds.length === 0) return;
-        try {
-            await api.post('/chats/messages/bulk-delete', { messageIds: selectedIds });
-            socket.emit('bulk_delete_messages', { roomId, messageIds: selectedIds });
-            setMessages(prev => prev.filter(msg => !selectedIds.includes(msg._id || msg.id)));
-            setSelectedIds([]);
-            setSelectionMode(false);
-            toast.success(`${selectedIds.length} messages deleted`);
-        } catch (error) {
-            console.error("Error bulk deleting messages:", error);
-            toast.error('Failed to delete messages');
-        }
-    };
-
-    const handleEndSessionClick = () => {
-        setShowModal(true);
-    };
+    // ... (intermediate code) ...
 
     const confirmEndSession = async () => {
         console.log('[CHAT] confirmEndSession clicked. Socket:', socket?.connected ? 'connected' : 'disconnected');
+
+        // Immediate UI feedback
+        setMessages([]);
+        setShowModal(false);
 
         const feedbackData = {
             partnerId: partner?.id,
@@ -215,7 +118,7 @@ const ChatPage = () => {
                 console.log('[CHAT] leave_room acknowledgment timed out. Navigating anyway...');
                 toast.success('Session ended');
                 navigate('/feedback', { state: feedbackData });
-            }, 1000); // reduced timeout since API is done
+            }, 1000);
 
             socket.emit('leave_room', { roomId }, () => {
                 console.log('[CHAT] Received leave_room acknowledgment from server');
