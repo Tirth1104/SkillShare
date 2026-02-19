@@ -27,7 +27,7 @@ export const ThemeProvider = ({ children }) => {
         localStorage.setItem('app-theme', theme);
 
         // Handle dark mode class for Tailwind 'dark:' variants if needed
-        const isDark = ['astro', 'cyberpunk', 'forest', 'ocean'].includes(theme);
+        const isDark = ['astro', 'cyberpunk', 'forest', 'ocean', 'sunset'].includes(theme);
         if (isDark) {
             root.classList.add('dark');
         } else {

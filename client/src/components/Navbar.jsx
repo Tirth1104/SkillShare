@@ -22,7 +22,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="bg-theme-surface p-4 shadow-md transition-colors duration-200 relative z-10 border-b border-gray-200 dark:border-gray-700">
+            <nav className="bg-theme-surface p-4 shadow-md transition-colors duration-200 sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
                 <div className="container mx-auto flex justify-between items-center">
                     <Link to="/dashboard" className="text-3xl font-black tracking-tighter gradient-text-primary animate-text-focus-in">
                         SkillShare
