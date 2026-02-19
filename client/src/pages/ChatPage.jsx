@@ -161,9 +161,9 @@ const ChatPage = () => {
     };
 
     const toggleMessageSelection = (messageId) => {
-        setSelectedIds(prev => 
-            prev.includes(messageId) 
-                ? prev.filter(id => id !== messageId) 
+        setSelectedIds(prev =>
+            prev.includes(messageId)
+                ? prev.filter(id => id !== messageId)
                 : [...prev, messageId]
         );
     };
@@ -224,13 +224,13 @@ const ChatPage = () => {
     const displayPartner = partner || { username: 'Anonymous' };
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col transition-colors duration-200">
+        <div className="min-h-screen bg-theme-bg text-theme-text flex flex-col transition-colors duration-200">
             <Navbar />
 
             <div className="flex-1 container mx-auto p-4 flex flex-col max-w-4xl">
-                <div className="bg-white dark:bg-gray-800 rounded-t-lg p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700 shadow-sm">
+                <div className="bg-theme-surface rounded-t-2xl p-4 flex justify-between items-center border-b border-gray-100 dark:border-gray-700 shadow-md">
                     <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                        <div className="w-10 h-10 bg-gradient-to-br from-theme-primary to-purple-500 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg">
                             {displayPartner.username[0]}
                         </div>
                         <div>
@@ -239,7 +239,7 @@ const ChatPage = () => {
                                     <span className="text-yellow-500 text-sm">★ {displayPartner.rating?.toFixed(1) || '0.0'}</span>
                                 )}
                             </h2>
-                            <p className={`text-xs ${displayPartner.isOnline ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
+                            <p className={`text-xs font-semibold ${displayPartner.isOnline ? 'text-green-500' : 'text-theme-muted'}`}>
                                 {displayPartner.isOnline ? 'Online' : 'Offline'}
                             </p>
                         </div>
@@ -247,64 +247,64 @@ const ChatPage = () => {
                     <div className="flex items-center space-x-2">
                         {selectionMode ? (
                             <div className="flex items-center space-x-2">
-                                <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">{selectedIds.length} selected</span>
-                                <button 
+                                <span className="text-sm font-semibold text-theme-primary">{selectedIds.length} selected</span>
+                                <button
                                     onClick={bulkDeleteMessages}
                                     disabled={selectedIds.length === 0}
                                     className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-3 py-1 rounded-lg text-sm font-bold shadow-sm transition"
                                 >
                                     Delete
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => { setSelectionMode(false); setSelectedIds([]); }}
-                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-sm font-semibold"
+                                    className="text-theme-muted hover:text-theme-text text-sm font-semibold"
                                 >
                                     Cancel
                                 </button>
                             </div>
                         ) : (
-                            <button 
+                            <button
                                 onClick={() => setSelectionMode(true)}
-                                className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                                className="text-theme-muted hover:text-theme-primary p-2 rounded-full hover:bg-theme-bg transition"
                                 title="Select multiple"
                             >
                                 <MoreVertical size={20} />
                             </button>
                         )}
-                        <button onClick={handleEndSessionClick} className="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 flex items-center space-x-1 px-3 py-1 rounded bg-red-100 dark:bg-red-900/20 hover:bg-red-200 dark:hover:bg-red-900/40 transition">
+                        <button onClick={handleEndSessionClick} className="text-red-500 hover:text-red-600 flex items-center space-x-1 px-3 py-1 rounded-full bg-red-500/10 hover:bg-red-500/20 transition font-bold text-sm">
                             <XCircle size={18} />
                             <span>End Session</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="flex-1 bg-white dark:bg-gray-900 p-4 overflow-y-auto space-y-4 border-l border-r border-gray-200 dark:border-gray-700">
+                <div className="flex-1 bg-theme-surface p-4 overflow-y-auto space-y-4 border-l border-r border-gray-100 dark:border-gray-700">
                     {messages.filter(msg => (msg.content || msg.message)?.trim().length > 0).map((msg, i) => {
                         const isSelected = selectedIds.includes(msg._id || msg.id);
                         return (
                             <div key={i} className={`flex items-center space-x-2 ${msg.sender === user.username ? 'flex-row-reverse space-x-reverse' : 'flex-row'}`}>
                                 {selectionMode && msg.sender === user.username && (
-                                    <input 
+                                    <input
                                         type="checkbox"
                                         checked={isSelected}
                                         onChange={() => toggleMessageSelection(msg._id || msg.id)}
-                                        className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                        className="w-5 h-5 rounded border-gray-300 text-theme-primary focus:ring-theme-primary cursor-pointer"
                                     />
                                 )}
-                                <div className={`group max-w-[80%] min-w-[50px] p-3 rounded-2xl shadow-sm ${msg.sender === user.username ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-none'} ${isSelected ? 'ring-2 ring-blue-400' : ''}`}>
+                                <div className={`group max-w-[80%] min-w-[50px] p-3 rounded-2xl shadow-sm ${msg.sender === user.username ? 'bg-theme-primary text-white rounded-tr-none' : 'bg-theme-bg text-theme-text rounded-tl-none border border-gray-100 dark:border-gray-700'} ${isSelected ? 'ring-2 ring-theme-primary' : ''}`}>
                                     <div className="flex items-start justify-between">
                                         <p className="whitespace-pre-wrap break-words">{msg.content || msg.message}</p>
                                         {!selectionMode && (msg._id || msg.id) && msg.sender === user.username && (
                                             <button
                                                 onClick={() => deleteMessage(msg._id || msg.id)}
-                                                className="ml-2 text-blue-200 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="ml-2 text-theme-bg hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                                 title="Delete message"
                                             >
                                                 <Trash2 size={14} />
                                             </button>
                                         )}
                                     </div>
-                                    <p className={`text-xs opacity-70 mt-1 text-right ${msg.sender === user.username ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'}`}>{msg.timestamp}</p>
+                                    <p className={`text-[10px] opacity-70 mt-1 text-right ${msg.sender === user.username ? 'text-white/80' : 'text-theme-muted'}`}>{msg.timestamp}</p>
                                 </div>
                             </div>
                         );
@@ -312,9 +312,9 @@ const ChatPage = () => {
                     <div ref={messagesEndRef} />
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-b-lg border-t border-gray-200 dark:border-gray-700 shadow-sm relative">
+                <div className="bg-theme-surface p-4 rounded-b-2xl border-t border-gray-100 dark:border-gray-700 shadow-lg relative">
                     {showEmojiPicker && (
-                        <div className="absolute bottom-full mb-2 left-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-2xl rounded-2xl p-3 flex flex-wrap gap-3 max-w-[280px] z-30 animate-in fade-in slide-in-from-bottom-2">
+                        <div className="absolute bottom-full mb-2 left-4 bg-theme-surface border border-gray-100 dark:border-gray-700 shadow-2xl rounded-2xl p-3 flex flex-wrap gap-3 max-w-[280px] z-30 animate-in fade-in slide-in-from-bottom-2">
                             {['😊', '😂', '❤️', '👍', '🙌', '🔥', '🤔', '😎', '👋', '🎉', '✨', '💯', '🙏', '😢', '🚀'].map(emoji => (
                                 <button
                                     key={emoji}
@@ -331,7 +331,7 @@ const ChatPage = () => {
                         <button
                             type="button"
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                            className={`p-2 rounded-full transition-colors ${showEmojiPicker ? 'text-blue-600 bg-blue-100 dark:bg-blue-900/40' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                            className={`p-2 rounded-full transition-colors ${showEmojiPicker ? 'text-theme-primary bg-theme-primary/10' : 'text-theme-muted hover:bg-theme-bg'}`}
                         >
                             <Smile size={24} />
                         </button>
@@ -347,9 +347,9 @@ const ChatPage = () => {
                                 }
                             }}
                             placeholder="Type a message..."
-                            className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                            className="flex-1 bg-theme-bg text-theme-text px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-theme-primary transition-colors placeholder-theme-muted"
                         />
-                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition transform active:scale-95 shadow-lg">
+                        <button type="submit" className="bg-theme-primary hover:opacity-90 text-white p-2 rounded-full transition transform active:scale-95 shadow-lg">
                             <Send size={20} />
                         </button>
                     </form>
@@ -359,21 +359,21 @@ const ChatPage = () => {
             {/* End Session Confirmation Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-sm w-full transform transition-all scale-100 border border-gray-200 dark:border-gray-700">
-                        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">End Session?</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    <div className="bg-theme-surface rounded-2xl shadow-2xl p-6 max-w-sm w-full transform transition-all scale-100 border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-xl font-bold mb-4 text-theme-text">End Session?</h3>
+                        <p className="text-theme-muted mb-6 font-medium">
                             Are you sure you want to leave this chat? This will end the current session.
                         </p>
                         <div className="flex justify-end space-x-3">
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                                className="px-4 py-2 rounded-xl text-theme-muted hover:bg-theme-bg transition font-bold"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={confirmEndSession}
-                                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition shadow-lg"
+                                className="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-lg"
                             >
                                 End Session
                             </button>

@@ -70,31 +70,31 @@ const MatchPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+        <div className="min-h-screen bg-theme-bg text-theme-text transition-colors duration-200">
             <Navbar />
             <div className="flex flex-col items-center justify-center h-[80vh] text-center px-4">
-                <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-500 text-transparent bg-clip-text">
+                <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-theme-primary to-purple-600 dark:from-theme-primary dark:to-purple-500 text-transparent bg-clip-text">
                     Find Your Skill Match
                 </h1>
 
-                <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-lg w-full transition-colors">
+                <div className="bg-theme-surface p-8 rounded-xl shadow-2xl max-w-lg w-full transition-colors border border-gray-100 dark:border-gray-700">
                     <div className="mb-6">
-                        <p className="text-gray-600 dark:text-gray-400 mb-2">You teach:</p>
+                        <p className="text-theme-muted mb-2 font-medium">You teach:</p>
                         <div className="flex flex-wrap gap-2 justify-center">
-                            {user?.skillsTeach?.map(s => <span key={s} className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">{s}</span>)}
+                            {user?.skillsTeach?.map(s => <span key={s} className="bg-theme-primary/10 text-theme-primary border border-theme-primary/20 px-3 py-1 rounded-full text-sm font-semibold">{s}</span>)}
                         </div>
                     </div>
                     <div className="mb-8">
-                        <p className="text-gray-600 dark:text-gray-400 mb-2">You want to learn:</p>
+                        <p className="text-theme-muted mb-2 font-medium">You want to learn:</p>
                         <div className="flex flex-wrap gap-2 justify-center">
-                            {user?.skillsLearn?.map(s => <span key={s} className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-3 py-1 rounded-full text-sm">{s}</span>)}
+                            {user?.skillsLearn?.map(s => <span key={s} className="bg-purple-500/10 text-purple-500 border border-purple-500/20 px-3 py-1 rounded-full text-sm font-semibold">{s}</span>)}
                         </div>
                     </div>
 
                     {status === 'idle' && (
                         <button
                             onClick={findMatch}
-                            className="w-full py-4 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
+                            className="w-full py-4 text-xl font-bold bg-theme-primary hover:opacity-90 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
                         >
                             Find Match
                         </button>
@@ -102,19 +102,19 @@ const MatchPage = () => {
 
                     {status === 'searching' && (
                         <div className="animate-pulse">
-                            <div className="w-16 h-16 border-4 border-t-blue-500 border-r-purple-500 border-b-blue-500 border-l-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                            <p className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Searching for a partner...</p>
-                            <button onClick={cancelSearch} className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline">Cancel</button>
+                            <div className="w-16 h-16 border-4 border-t-theme-primary border-r-purple-500 border-b-theme-primary border-l-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
+                            <p className="text-xl font-semibold mb-4 text-theme-text">Searching for a partner...</p>
+                            <button onClick={cancelSearch} className="text-red-500 hover:text-red-700 underline font-medium">Cancel Search</button>
                         </div>
                     )}
 
                     {status === 'matched' && (
-                        <div className="text-green-600 dark:text-green-400">
+                        <div className="text-green-500">
                             <p className="text-2xl font-bold mb-2">Match Found!</p>
                             {partner && (
-                                <p className="mb-2">You are paired with <span className="font-bold">{partner.username} (★ {partner.rating?.toFixed(1) || '0.0'})</span></p>
+                                <p className="mb-2 text-theme-text">You are paired with <span className="font-bold">{partner.username} (★ {partner.rating?.toFixed(1) || '0.0'})</span></p>
                             )}
-                            <p>Redirecting to chat...</p>
+                            <p className="text-theme-muted">Redirecting to chat...</p>
                         </div>
                     )}
                 </div>

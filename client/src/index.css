@@ -1,2 +1,72 @@
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
+
+/* Theme Variable Definitions */
+:root {
+  --color-primary: #2563eb;
+  --color-bg: #f3f4f6;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --color-text-muted: #4b5563;
+  --nav-bg: #ffffff;
+}
+
+.theme-astro {
+  --color-primary: #6366f1;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --nav-bg: #0f172a;
+}
+
+.theme-cyberpunk {
+  --color-primary: #ff00ff;
+  --color-bg: #000000;
+  --color-surface: #1a1a1a;
+  --color-text: #00ff00;
+  --color-text-muted: #00cccc;
+  --nav-bg: #000000;
+}
+
+.theme-forest {
+  --color-primary: #22c55e;
+  --color-bg: #064e3b;
+  --color-surface: #065f46;
+  --color-text: #ecfdf5;
+  --color-text-muted: #a7f3d0;
+  --nav-bg: #064e3b;
+}
+
+.theme-sunset {
+  --color-primary: #f97316;
+  --color-bg: #4c1d95;
+  --color-surface: #5b21b6;
+  --color-text: #fff7ed;
+  --color-text-muted: #fed7aa;
+  --nav-bg: #2e1065;
+}
+
+.theme-ocean {
+  --color-primary: #06b6d4;
+  --color-bg: #083344;
+  --color-surface: #164e63;
+  --color-text: #ecfeff;
+  --color-text-muted: #a5f3fc;
+  --nav-bg: #083344;
+}
+
+/* Base styles using theme variables */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bg-theme-bg { background-color: var(--color-bg); }
+.bg-theme-surface { background-color: var(--color-surface); }
+.text-theme-text { color: var(--color-text); }
+.text-theme-muted { color: var(--color-text-muted); }
+.border-theme-border { border-color: var(--color-text-muted); }
+.text-theme-primary { color: var(--color-primary); }
+.bg-theme-primary { background-color: var(--color-primary); }

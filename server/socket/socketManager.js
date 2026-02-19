@@ -179,6 +179,11 @@ module.exports = (io) => {
                     chat.isCompleted = true; // Mark chat as counted
                     await chat.save();
                     console.log(`[CHAT] Sessions incremented for both participants in room ${roomId}`);
+
+                    // NEW: Delete chat history and the chat record for a fresh start
+                    console.log(`[CHAT] Deleting history for room ${roomId} as session ended.`);
+                    await Message.deleteMany({ chatId: roomId });
+                    await Chat.findByIdAndDelete(roomId);
                 }
             } catch (err) {
                 console.error("[CHAT] Error incrementing sessions:", err);

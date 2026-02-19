@@ -134,7 +134,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+        <div className="min-h-screen bg-theme-bg text-theme-text transition-colors duration-200">
             <Navbar />
             <div className="container mx-auto p-8">
                 <div className="mb-8 flex items-center space-x-4">
@@ -146,7 +146,7 @@ const Dashboard = () => {
                                 type="text"
                                 value={newUsername}
                                 onChange={(e) => setNewUsername(e.target.value)}
-                                className="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 border border-gray-400 dark:border-gray-500 focus:outline-none"
+                                className="px-2 py-1 rounded bg-theme-surface border border-gray-300 dark:border-gray-600 focus:outline-none text-theme-text"
                             />
                             <button onClick={handleUpdateUsername} className="text-green-600 hover:text-green-500 bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
                                 <Check size={20} />
@@ -158,7 +158,7 @@ const Dashboard = () => {
                     ) : (
                         <div className="flex items-center space-x-3">
                             <span className="text-3xl font-bold">{user?.username}</span>
-                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-gray-500 hover:text-blue-500 transition">
+                            <button onClick={() => { setIsEditingUsername(true); setNewUsername(user?.username); }} className="text-theme-muted hover:text-theme-primary transition">
                                 <Edit2 size={20} />
                             </button>
                         </div>
@@ -168,34 +168,34 @@ const Dashboard = () => {
                 {usernameError && <p className="text-red-500 mb-6 -mt-6">{usernameError}</p>}
 
                 {/* Discover New Skills Discovery Card */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 mb-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01]">
+                <div className="bg-gradient-to-r from-theme-primary to-purple-600 rounded-2xl p-6 mb-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 transition transform hover:scale-[1.01]">
                     <div className="text-center md:text-left">
-                        <h2 className="text-2xl font-bold mb-1">Discover New Skills 🚀</h2>
-                        <p className="opacity-90">Browse our public directory to find the perfect partner for your next exchange.</p>
+                        <h2 className="text-2xl font-bold mb-1 text-white">Discover New Skills 🚀</h2>
+                        <p className="opacity-90 text-white">Browse our public directory to find the perfect partner for your next exchange.</p>
                     </div>
                     <Link
                         to="/explore"
-                        className="bg-white text-blue-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg whitespace-nowrap"
+                        className="bg-white text-theme-primary px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg whitespace-nowrap"
                     >
                         Explore Now
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg transition-colors">
-                        <h3 className="text-xl font-semibold mb-2 text-green-600 dark:text-green-400">Reputation Score</h3>
+                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-xl font-semibold mb-2 text-theme-primary">Reputation Score</h3>
                         <p className="text-4xl font-bold">{user?.rating?.toFixed(1) || 'N/A'}</p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg transition-colors">
-                        <h3 className="text-xl font-semibold mb-2 text-purple-600 dark:text-purple-400">Sessions Completed</h3>
+                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-xl font-semibold mb-2 text-purple-500">Sessions Completed</h3>
                         <p className="text-4xl font-bold">{user?.sessionsCompleted || 0}</p>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg transition-colors">
-                        <h3 className="text-xl font-semibold mb-2 text-orange-600 dark:text-orange-400">Skills Taught</h3>
+                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-xl font-semibold mb-2 text-orange-500">Skills Taught</h3>
                         <div className="flex flex-wrap gap-2 mt-2 mb-4">
                             {user?.skillsTeach?.map((skill, i) => (
-                                <span key={i} className="bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-white px-2 py-1 rounded text-sm">{skill}</span>
-                            )) || <span className="text-gray-500">None</span>}
+                                <span key={i} className="bg-theme-primary/20 text-theme-primary border border-theme-primary/30 px-2 py-1 rounded text-sm font-medium">{skill}</span>
+                            )) || <span className="text-theme-muted">None</span>}
                         </div>
                         <form onSubmit={handleAddSkillTeach} className="flex gap-2">
                             <input
@@ -203,23 +203,23 @@ const Dashboard = () => {
                                 value={newSkillTeach}
                                 onChange={(e) => setNewSkillTeach(e.target.value)}
                                 placeholder="Add skill..."
-                                className="w-full px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none"
+                                className="w-full px-2 py-1 rounded bg-theme-bg border border-gray-300 dark:border-gray-600 focus:outline-none text-theme-text placeholder-theme-muted"
                             />
-                            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">+</button>
+                            <button type="submit" className="bg-theme-primary hover:opacity-90 text-white px-3 py-1 rounded">+</button>
                         </form>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-8">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg transition-colors min-h-[400px]">
+                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors min-h-[400px] border border-gray-100 dark:border-gray-700">
                         <Bar options={{ ...options, maintainAspectRatio: false }} data={chartData} height={350} />
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg transition-colors">
-                        <h3 className="text-xl font-semibold mb-4 text-pink-600 dark:text-pink-400">Skills You Want to Learn</h3>
+                    <div className="bg-theme-surface p-6 rounded-lg shadow-lg transition-colors border border-gray-100 dark:border-gray-700">
+                        <h3 className="text-xl font-semibold mb-4 text-pink-500">Skills You Want to Learn</h3>
                         <div className="flex flex-wrap gap-2 mb-4">
                             {user?.skillsLearn?.map((skill, i) => (
-                                <span key={i} className="bg-pink-100 dark:bg-pink-600 text-pink-800 dark:text-white px-2 py-1 rounded text-sm">{skill}</span>
-                            )) || <span className="text-gray-500">None</span>}
+                                <span key={i} className="bg-pink-500/20 text-pink-500 border border-pink-500/30 px-2 py-1 rounded text-sm font-medium">{skill}</span>
+                            )) || <span className="text-theme-muted">None</span>}
                         </div>
                         <form onSubmit={handleAddSkillLearn} className="flex gap-2">
                             <input
@@ -227,7 +227,7 @@ const Dashboard = () => {
                                 value={newSkillLearn}
                                 onChange={(e) => setNewSkillLearn(e.target.value)}
                                 placeholder="Add skill..."
-                                className="w-full px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none"
+                                className="w-full px-2 py-1 rounded bg-theme-bg border border-gray-300 dark:border-gray-600 focus:outline-none text-theme-text placeholder-theme-muted"
                             />
                             <button type="submit" className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded">+</button>
                         </form>

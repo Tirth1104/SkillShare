@@ -9,6 +9,7 @@ import FeedbackPage from './pages/FeedbackPage';
 import Explore from './pages/Explore';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Toaster, toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
@@ -50,24 +51,26 @@ const InviteListener = () => {
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <InviteListener />
-        <Toaster position="top-center" />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/match" element={<MatchPage />} />
-            <Route path="/inbox" element={<InboxPage />} />
-            <Route path="/chat/:roomId" element={<ChatPage />} />
-            <Route path="/feedback" element={<FeedbackPage />} />
-            <Route path="/explore" element={<Explore />} />
-            {/* Add more protected routes here */}
-          </Route>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-        </Routes>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <InviteListener />
+          <Toaster position="top-center" />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/match" element={<MatchPage />} />
+              <Route path="/inbox" element={<InboxPage />} />
+              <Route path="/chat/:roomId" element={<ChatPage />} />
+              <Route path="/feedback" element={<FeedbackPage />} />
+              <Route path="/explore" element={<Explore />} />
+              {/* Add more protected routes here */}
+            </Route>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }

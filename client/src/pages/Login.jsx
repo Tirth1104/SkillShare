@@ -22,46 +22,48 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-            <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-3xl font-bold mb-6 text-center text-blue-400">Login</h2>
-                {error && <p className="text-red-500 mb-4">{error}</p>}
-                <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="min-h-screen flex items-center justify-center bg-theme-bg text-theme-text transition-colors duration-200">
+            <div className="bg-theme-surface p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 dark:border-gray-700">
+                <h2 className="text-4xl font-extrabold mb-8 text-center bg-gradient-to-r from-theme-primary to-purple-600 text-transparent bg-clip-text">Login</h2>
+                {error && <p className="text-red-500 mb-6 bg-red-500/10 p-3 rounded-lg text-sm font-semibold border border-red-500/20">{error}</p>}
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
+                        <label className="block text-sm font-bold mb-2 text-theme-muted">Email Address</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500"
+                            className="w-full px-4 py-3 rounded-xl bg-theme-bg border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-theme-primary transition-all text-theme-text placeholder-theme-muted"
+                            placeholder="you@example.com"
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Password</label>
+                        <label className="block text-sm font-bold mb-2 text-theme-muted">Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500 pr-10"
+                                className="w-full px-4 py-3 rounded-xl bg-theme-bg border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-theme-primary transition-all text-theme-text placeholder-theme-muted pr-12"
+                                placeholder="••••••••"
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white"
+                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-theme-muted hover:text-theme-primary transition-colors"
                             >
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                         </div>
                     </div>
-                    <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
-                        Login
+                    <button type="submit" className="w-full bg-theme-primary hover:opacity-90 text-white font-bold py-3 px-4 rounded-xl transition duration-200 shadow-lg transform hover:scale-[1.02] active:scale-95">
+                        Sign In
                     </button>
                 </form>
-                <p className="mt-4 text-center text-gray-400">
-                    Don't have an account? <Link to="/register" className="text-blue-400 hover:underline">Register</Link>
+                <p className="mt-8 text-center text-theme-muted font-medium">
+                    New to SkillShare? <Link to="/register" className="text-theme-primary hover:underline font-bold">Create an account</Link>
                 </p>
             </div>
         </div>
