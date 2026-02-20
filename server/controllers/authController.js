@@ -194,3 +194,28 @@ exports.getSkills = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.getPublicStats = async (req, res) => {
+    try {
+        const userCount = await User.countDocuments();
+
+        // Aggregate total sessions completed across all users
+        const sessionStats = await User.aggregate([
+            { $group: { _id: null, totalSessions: { $sum: "$sessionsCompleted" } } }
+        ]);
+        const sessionsCompleted = sessionStats[0]?.totalSessions || 0;
+
+        // Get unique skills taught
+        const uniqueSkillsHandler = await User.distinct('skillsTeach');
+        const skillsCount = uniqueSkillsHandler.length;
+
+        res.json({
+            userCount,
+            sessionsCompleted,
+            skillsCount
+        });
+    } catch (error) {
+        console.error('Error fetching public stats:', error);
+        res.status(500).json({ message: 'Server error fetching stats' });
+    }
+};

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
+import Home from './pages/Home';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import MatchPage from './pages/MatchPage';
@@ -67,7 +68,7 @@ function App() {
               <Route path="/explore" element={<Explore />} />
               {/* Add more protected routes here */}
             </Route>
-            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/" element={<Home />} />
           </Routes>
         </AuthProvider>
       </ThemeProvider>

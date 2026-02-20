@@ -10,5 +10,6 @@ router.get('/profile', auth, authController.getProfile);
 router.put('/profile', auth, authController.updateProfile);
 router.get('/users', auth, authController.getUsers);
 router.get('/skills', auth, authController.getSkills);
+router.get('/public-stats', authController.getPublicStats);
 
 module.exports = router;
